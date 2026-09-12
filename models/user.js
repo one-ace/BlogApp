@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { createHmac } = require('crypto');
+const crypto = require('crypto');
 const { createTokenForUser } = require('../services/authentication');
 
 const userSchema = new Schema(
@@ -49,9 +49,30 @@ const userSchema = new Schema(
       type: String,
       select: false,
     },
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      select: false,
+    },
   },
   { timestamps: true }
 );
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+  return resetToken;
+};
 
 userSchema.pre('save', async function () {
   const user = this;
@@ -71,7 +92,7 @@ userSchema.statics.matchpasswordAndGenerateToken = async function (email, passwo
   if (user.password && (user.password.startsWith('$2a$') || user.password.startsWith('$2b$'))) {
     isMatch = await bcrypt.compare(password, user.password);
   } else if (user.salt) {
-    const userProvidedHash = createHmac('sha256', user.salt).update(password).digest('hex');
+    const userProvidedHash = crypto.createHmac('sha256', user.salt).update(password).digest('hex');
     isMatch = user.password === userProvidedHash;
     if (isMatch) {
       user.password = password;

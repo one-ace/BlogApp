@@ -3,9 +3,11 @@ const multer = require('multer');
 const path = require('path');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
+const crypto = require('crypto');
 const User = require('../models/user');
 const Blog = require('../models/blog');
 const { createTokenForUser } = require('../services/authentication');
+const { sendPasswordResetEmail } = require('../services/emailService');
 
 const router = Router();
 
@@ -53,6 +55,7 @@ router.get('/signin', (req, res) => {
   if (req.user) return res.redirect('/user/dashboard');
   res.render('signin', {
     user: req.user,
+    resetSuccess: req.query.reset === 'success',
   });
 });
 
@@ -240,6 +243,164 @@ router.post('/signup', authLimiter, async (req, res) => {
 
 router.get('/logout', (req, res) => {
   res.clearCookie('token').redirect('/');
+});
+
+router.get('/forgot-password', (req, res) => {
+  if (req.user) return res.redirect('/user/dashboard');
+  res.render('forgot-password', {
+    user: req.user,
+    error: null,
+    success: false,
+    email: '',
+    simulatedResetUrl: null,
+  });
+});
+
+router.post('/forgot-password', authLimiter, async (req, res) => {
+  const { email } = req.body;
+  const cleanEmail = email ? email.trim().toLowerCase() : '';
+
+  if (!cleanEmail) {
+    return res.render('forgot-password', {
+      user: req.user,
+      error: 'Please enter your email address.',
+      success: false,
+      email: '',
+      simulatedResetUrl: null,
+    });
+  }
+
+  try {
+    const user = await User.findOne({ email: cleanEmail });
+
+    let simulatedResetUrl = null;
+
+    if (user) {
+      const resetToken = user.createPasswordResetToken();
+      await user.save({ validateBeforeSave: false });
+
+      const resetUrl = `${req.protocol}://${req.get('host')}/user/reset-password/${resetToken}`;
+      const emailResult = await sendPasswordResetEmail({
+        to: user.email,
+        resetUrl,
+        fullName: user.fullName,
+      });
+
+      if (emailResult && emailResult.simulated) {
+        simulatedResetUrl = resetUrl;
+      }
+    }
+
+    return res.render('forgot-password', {
+      user: req.user,
+      error: null,
+      success: true,
+      email: cleanEmail,
+      simulatedResetUrl,
+    });
+  } catch (error) {
+    console.error('Error handling forgot-password request:', error);
+    return res.render('forgot-password', {
+      user: req.user,
+      error: 'An unexpected error occurred. Please try again.',
+      success: false,
+      email: cleanEmail,
+      simulatedResetUrl: null,
+    });
+  }
+});
+
+router.get('/reset-password/:token', async (req, res) => {
+  if (req.user) return res.redirect('/user/dashboard');
+  const { token } = req.params;
+
+  try {
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.render('reset-password', {
+        user: req.user,
+        token: null,
+        error: 'Password reset link is invalid or has expired. Please request a new link.',
+      });
+    }
+
+    return res.render('reset-password', {
+      user: req.user,
+      token,
+      error: null,
+    });
+  } catch (error) {
+    console.error('Error verifying reset token:', error);
+    return res.render('reset-password', {
+      user: req.user,
+      token: null,
+      error: 'Invalid password reset link. Please request a new one.',
+    });
+  }
+});
+
+router.post('/reset-password/:token', authLimiter, async (req, res) => {
+  const { token } = req.params;
+  const { password, confirmPassword } = req.body;
+
+  try {
+    if (!password || !confirmPassword) {
+      return res.render('reset-password', {
+        user: req.user,
+        token,
+        error: 'Please fill in both password fields.',
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.render('reset-password', {
+        user: req.user,
+        token,
+        error: 'Passwords do not match.',
+      });
+    }
+
+    if (password.length < 8) {
+      return res.render('reset-password', {
+        user: req.user,
+        token,
+        error: 'Password must be at least 8 characters long.',
+      });
+    }
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const user = await User.findOne({
+      resetPasswordToken: hashedToken,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.render('reset-password', {
+        user: req.user,
+        token: null,
+        error: 'Password reset link has expired or is invalid. Please request a new one.',
+      });
+    }
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    return res.redirect('/user/signin?reset=success');
+  } catch (error) {
+    console.error('Error saving new password:', error);
+    return res.render('reset-password', {
+      user: req.user,
+      token,
+      error: 'Failed to reset password. Please try again.',
+    });
+  }
 });
 
 module.exports = router;
