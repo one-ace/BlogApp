@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>Pricing & Membership Plans — Blog App</title>
+  <meta name="description" content="Transparent, creator-friendly pricing for independent writers, journalists, and publishing collectives.">
+</head>
+<body class="bg-body-warm">
+  <%- include('./partials/nav') %>
+  <header class="py-5 py-lg-6 text-center border-bottom bg-white">
+    <div class="container py-lg-3">
+      <div class="mx-auto" style="max-width: 720px;">
+        <span class="eyebrow-text d-inline-block mb-2">Transparent Membership</span>
+        <h1 class="hero-headline mb-3" style="font-size: clamp(2.2rem, 4.5vw, 3.4rem);">
+          Simple, fair plans for every stage of your writing.
+        </h1>
+        <p class="text-secondary fs-5 mb-4">
+          Never be locked into complicated contracts or hidden platform fees. Write for free or upgrade as your audience expands.
+        </p>
+        <div class="d-inline-flex align-items-center gap-3 p-1 rounded-pill bg-light border">
+          <button type="button" id="btnMonthly" class="btn btn-sm rounded-pill px-3 py-1 fw-semibold btn-dark shadow-sm" onclick="setBilling('monthly')">
+            Monthly
+          </button>
+          <button type="button" id="btnAnnual" class="btn btn-sm rounded-pill px-3 py-1 fw-semibold text-secondary" onclick="setBilling('annual')">
+            Annual <span class="badge bg-success-subtle text-success-emphasis rounded-pill ms-1">Save 20%</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="py-5 py-lg-6">
+    <div class="container">
+      <div class="row g-4 align-items-stretch justify-content-center mb-5">
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="editorial-card p-4 p-lg-5 h-100 d-flex flex-column bg-white">
+            <div class="mb-4">
+              <span class="badge text-bg-light border text-secondary px-2 py-1 mb-2">Starter</span>
+              <h2 class="h4 fw-bold text-dark mb-1">Free</h2>
+              <p class="text-secondary small mb-0">Essential tools for curious writers and avid readers.</p>
+            </div>
+            <div class="d-flex align-items-baseline gap-1 mb-4 pb-3 border-bottom">
+              <span class="h1 fw-bold text-dark mb-0">$0</span>
+              <span class="text-muted small">/ month</span>
+            </div>
+            <ul class="list-unstyled d-flex flex-column gap-3 small text-secondary mb-4 flex-grow-1">
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Read unlimited public stories</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Personal author profile &amp; bio</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Markdown writing canvas &amp; live preview</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Community claps and discussions</span>
+              </li>
+              <li class="d-flex align-items-center gap-2 text-muted">
+                <i class="bi bi-dash text-muted fs-5"></i>
+                <span class="text-decoration-line-through">Custom domain mapping</span>
+              </li>
+              <li class="d-flex align-items-center gap-2 text-muted">
+                <i class="bi bi-dash text-muted fs-5"></i>
+                <span class="text-decoration-line-through">Advanced reader retention analytics</span>
+              </li>
+            </ul>
+            <a href="/user/signup?plan=free" class="btn btn-editorial-outline w-100 py-2">
+              Start Writing Free
+            </a>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="editorial-card pricing-card-highlighted p-4 p-lg-5 h-100 d-flex flex-column shadow-sm bg-white position-relative">
+            <span class="pricing-badge">Most Popular</span>
+            <div class="mb-4">
+              <span class="badge bg-dark text-white px-2 py-1 mb-2">Individual Writer</span>
+              <h2 class="h4 fw-bold text-dark mb-1">Pro</h2>
+              <p class="text-secondary small mb-0">For dedicated writers cultivating a loyal audience.</p>
+            </div>
+            <div class="d-flex align-items-baseline gap-1 mb-4 pb-3 border-bottom">
+              <span id="pricePro" class="h1 fw-bold text-dark mb-0">$12</span>
+              <span class="text-muted small">/ month</span>
+              <span id="subPro" class="text-muted extra-small ms-1 d-none">(billed annually)</span>
+            </div>
+            <ul class="list-unstyled d-flex flex-column gap-3 small text-secondary mb-4 flex-grow-1">
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check-lg text-dark fw-bold fs-5"></i>
+                <strong class="text-dark">Everything in Free</strong>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Deep audience analytics &amp; read ratios</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Custom author subdomain &amp; newsletter dispatch</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Story cover banner uploads &amp; asset hosting</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Priority placement in editorial homepage feed</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Zero transaction platform commission</span>
+              </li>
+            </ul>
+            <a href="/user/signup?plan=pro" class="btn btn-editorial-primary w-100 py-2">
+              Upgrade to Pro
+            </a>
+          </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="editorial-card p-4 p-lg-5 h-100 d-flex flex-column bg-white">
+            <div class="mb-4">
+              <span class="badge text-bg-light border text-secondary px-2 py-1 mb-2">Teams &amp; Presses</span>
+              <h2 class="h4 fw-bold text-dark mb-1">Studio</h2>
+              <p class="text-secondary small mb-0">For publication collectives, magazines, and writing teams.</p>
+            </div>
+            <div class="d-flex align-items-baseline gap-1 mb-4 pb-3 border-bottom">
+              <span id="priceStudio" class="h1 fw-bold text-dark mb-0">$29</span>
+              <span class="text-muted small">/ month</span>
+              <span id="subStudio" class="text-muted extra-small ms-1 d-none">(billed annually)</span>
+            </div>
+            <ul class="list-unstyled d-flex flex-column gap-3 small text-secondary mb-4 flex-grow-1">
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check-lg text-dark fw-bold fs-5"></i>
+                <strong class="text-dark">Everything in Pro</strong>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Up to 10 author &amp; editor seats</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Custom domain mapping (e.g. publication.com)</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Editorial review workflows &amp; team draft review</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Bulk markdown import &amp; data export</span>
+              </li>
+              <li class="d-flex align-items-center gap-2">
+                <i class="bi bi-check2 text-dark fs-5"></i>
+                <span>Dedicated account manager &amp; phone support</span>
+              </li>
+            </ul>
+            <a href="/user/signup?plan=studio" class="btn btn-editorial-outline w-100 py-2">
+              Start Studio Plan
+            </a>
+          </div>
+        </div>
+      </div>
+      <section class="mt-5 pt-lg-4">
+        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+          <span class="eyebrow-text d-block mb-2">In-Depth Comparison</span>
+          <h2 class="section-title mb-2">Compare every feature across plans</h2>
+          <p class="text-secondary small">Everything you need to write, publish, and connect with readers.</p>
+        </div>
+        <div class="table-responsive rounded-4 border bg-white shadow-sm">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light border-bottom">
+              <tr>
+                <th scope="col" class="p-4" style="width: 40%;">Core Capabilities</th>
+                <th scope="col" class="p-4 text-center" style="width: 20%;">Free</th>
+                <th scope="col" class="p-4 text-center bg-light-subtle" style="width: 20%;"><span class="fw-bold text-dark">Pro</span></th>
+                <th scope="col" class="p-4 text-center" style="width: 20%;">Studio</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="p-4 fw-semibold text-dark">Public Articles Publishing</td>
+                <td class="p-4 text-center"><i class="bi bi-check-circle-fill text-success fs-5"></i></td>
+                <td class="p-4 text-center bg-light-subtle"><i class="bi bi-check-circle-fill text-success fs-5"></i></td>
+                <td class="p-4 text-center"><i class="bi bi-check-circle-fill text-success fs-5"></i></td>
+              </tr>
+              <tr>
+                <td class="p-4 fw-semibold text-dark">Markdown Canvas &amp; Live Preview</td>
+                <td class="p-4 text-center"><i class="bi bi-check-circle-fill text-success fs-5"></i></td>
+                <td class="p-4 text-center bg-light-subtle"><i class="bi bi-check-circle-fill text-success fs-5"></i></td>
+                <td class="p-4 text-center"><i class="bi bi-check-circle-fill text-success fs-5"></i></td>
+              </tr>
+              <tr>
+                <td class="p-4 fw-semibold text-dark">Claps &amp; Community Comments</td>
+                <td class="p-4 text-center"><i class="bi bi-check-circle-fill text-success fs-5"></i></td>
+                <td class="p-4 text-center bg-light-subtle"><i class="bi bi-check-circle-fill text-success fs-5"></i></td>
+                <td class="p-4 text-center"><i class="bi bi-check-circle-fill text-success fs-5"></i></td>
+              </tr>
+              <tr>
+                <td class="p-4 fw-semibold text-dark">Story Cover Image Uploads</td>
+                <td class="p-4 text-center text-muted">Limited (1MB)</td>
+                <td class="p-4 text-center bg-light-subtle"><i class="bi bi-check-circle-fill text-success fs-5"></i> (Full HD)</td>
+                <td class="p-4 text-center"><i class="bi bi-check-circle-fill text-success fs-5"></i> (Unlimited)</td>
+              </tr>
+              <tr>
+                <td class="p-4 fw-semibold text-dark">Author Subdomain / Custom Domain</td>
+                <td class="p-4 text-center text-muted"><i class="bi bi-dash text-secondary"></i></td>
+                <td class="p-4 text-center bg-light-subtle">Subdomain</td>
+                <td class="p-4 text-center"><i class="bi bi-check-circle-fill text-success fs-5"></i> Custom Domain</td>
+              </tr>
+              <tr>
+                <td class="p-4 fw-semibold text-dark">Audience Analytics</td>
+                <td class="p-4 text-center text-muted">Basic View Count</td>
+                <td class="p-4 text-center bg-light-subtle">Detailed Read Time</td>
+                <td class="p-4 text-center">Full Cohort Analytics</td>
+              </tr>
+              <tr>
+                <td class="p-4 fw-semibold text-dark">Seats / Contributors</td>
+                <td class="p-4 text-center text-secondary">1 Author</td>
+                <td class="p-4 text-center bg-light-subtle text-secondary">1 Author</td>
+                <td class="p-4 text-center fw-semibold text-dark">Up to 10 Seats</td>
+              </tr>
+              <tr>
+                <td class="p-4 fw-semibold text-dark">Support Level</td>
+                <td class="p-4 text-center text-secondary">Community</td>
+                <td class="p-4 text-center bg-light-subtle text-secondary">Priority Email</td>
+                <td class="p-4 text-center fw-semibold text-dark">24/7 Dedicated Manager</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="mt-5 pt-lg-5">
+        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+          <span class="eyebrow-text d-block mb-2">Got Questions?</span>
+          <h2 class="section-title mb-2">Frequently Asked Questions</h2>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-12 col-lg-8">
+            <div class="accordion accordion-flush rounded-4 border bg-white p-3 p-md-4 shadow-sm" id="pricingFaqAccordion">
+              <div class="accordion-item border-bottom py-2">
+                <h3 class="accordion-header" id="headingOne">
+                  <button class="accordion-button collapsed fw-semibold text-dark fs-6 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    Can I start writing without providing a credit card?
+                  </button>
+                </h3>
+                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#pricingFaqAccordion">
+                  <div class="accordion-body text-secondary small pt-1">
+                    Yes, absolutely. The Free plan requires only your name and email address. You can draft, publish, and interact with the community right away with zero payment information required.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-bottom py-2">
+                <h3 class="accordion-header" id="headingTwo">
+                  <button class="accordion-button collapsed fw-semibold text-dark fs-6 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Do I retain full copyright of my writing?
+                  </button>
+                </h3>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#pricingFaqAccordion">
+                  <div class="accordion-body text-secondary small pt-1">
+                    100%. Everything you write and publish on our platform belongs exclusively to you. You can export your content, cross-post to other platforms, or delete your stories whenever you choose.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item border-bottom py-2">
+                <h3 class="accordion-header" id="headingThree">
+                  <button class="accordion-button collapsed fw-semibold text-dark fs-6 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Can I change or cancel my plan at any time?
+                  </button>
+                </h3>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#pricingFaqAccordion">
+                  <div class="accordion-body text-secondary small pt-1">
+                    Yes. You can switch between Monthly and Annual billing or downgrade to the Free plan at any time from your account settings with a single click. No lock-in penalties.
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item py-2">
+                <h3 class="accordion-header" id="headingFour">
+                  <button class="accordion-button collapsed fw-semibold text-dark fs-6 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    How does custom domain mapping work in the Studio plan?
+                  </button>
+                </h3>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#pricingFaqAccordion">
+                  <div class="accordion-body text-secondary small pt-1">
+                    You can point any domain or subdomain (e.g. <code>journal.yourname.com</code>) via simple CNAME records. We handle automatic SSL certificate issuance and renewals at no extra charge.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="mt-5 pt-lg-4">
+        <div class="editorial-card p-5 text-center bg-dark text-white rounded-4 shadow-sm">
+          <div class="mx-auto" style="max-width: 600px;">
+            <h2 class="h2 font-newsreader mb-3 text-white">Join thousands of thoughtful writers today.</h2>
+            <p class="text-white-50 mb-4">
+              Publish your first story in under five minutes with zero friction.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+              <a href="/user/signup" class="btn btn-light fw-semibold px-4 py-2">Create Free Account</a>
+              <a href="/#explore" class="btn btn-outline-light px-4 py-2">Explore Stories</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer class="footer py-5 border-top bg-white">
+    <div class="container">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="fw-bold font-newsreader text-dark fs-5">Blog App</span>
+          <span class="text-muted small ms-2">© 2026 Blog App Inc. All rights reserved.</span>
+        </div>
+        <div class="d-flex gap-4 small flex-wrap justify-content-center">
+          <a href="/" class="footer-link">Home</a>
+          <a href="/#explore" class="footer-link">Explore</a>
+          <a href="/pricing" class="footer-link fw-bold text-dark">Pricing</a>
+          <a href="/user/signin" class="footer-link">Sign In</a>
+          <a href="/privacy" class="footer-link">Privacy</a>
+          <a href="/terms" class="footer-link">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <%- include('./partials/scripts') %>
+  <script>
+    function setBilling(mode) {
+      const btnMonthly = document.getElementById('btnMonthly');
+      const btnAnnual = document.getElementById('btnAnnual');
+      const pricePro = document.getElementById('pricePro');
+      const priceStudio = document.getElementById('priceStudio');
+      const subPro = document.getElementById('subPro');
+      const subStudio = document.getElementById('subStudio');
+      if (mode === 'annual') {
+        btnAnnual.className = 'btn btn-sm rounded-pill px-3 py-1 fw-semibold btn-dark shadow-sm';
+        btnMonthly.className = 'btn btn-sm rounded-pill px-3 py-1 fw-semibold text-secondary';
+        pricePro.textContent = '$10';
+        priceStudio.textContent = '$24';
+        subPro.classList.remove('d-none');
+        subStudio.classList.remove('d-none');
+      } else {
+        btnMonthly.className = 'btn btn-sm rounded-pill px-3 py-1 fw-semibold btn-dark shadow-sm';
+        btnAnnual.className = 'btn btn-sm rounded-pill px-3 py-1 fw-semibold text-secondary';
+        pricePro.textContent = '$12';
+        priceStudio.textContent = '$29';
+        subPro.classList.add('d-none');
+        subStudio.classList.add('d-none');
+      }
+    }
+  </script>
+</body>
+</html>

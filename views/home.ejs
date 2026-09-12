@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>Blog App — Your ideas deserve a place to be read</title>
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-editorial sticky-top" aria-label="Main Navigation">
+      <div class="container py-1">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#hero">
+          <span>Blog App</span>
+        </a>
+        <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="bi bi-list fs-3 text-dark"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-2">
+            <li class="nav-item">
+              <a class="nav-link" href="/features">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#explore">Explore</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/pricing">Pricing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">About</a>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <% if (locals.user) { %>
+              <div class="dropdown">
+                <a class="d-flex align-items-center gap-2 text-decoration-none py-1 px-2 rounded-3 border bg-white shadow-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                  <img src="<%= locals.user.profileImageURL || '/images/male-face.jpg' %>" alt="Avatar" width="30" height="30" class="rounded-circle object-fit-cover border">
+                  <span class="small fw-semibold text-dark"><%= locals.user.fullName || locals.user.email %></span>
+                  <i class="bi bi-chevron-down small text-muted" style="font-size:0.7rem;"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border mt-2">
+                  <li><div class="dropdown-header text-truncate" style="max-width: 200px;"><%= locals.user.email %></div></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item d-flex align-items-center gap-2" href="/user/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                  <li><a class="dropdown-item d-flex align-items-center gap-2" href="/user/edit-profile"><i class="bi bi-person-gear"></i> Edit Profile</a></li>
+                  <li><a class="dropdown-item d-flex align-items-center gap-2" href="#explore"><i class="bi bi-compass"></i> Explore Stories</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="/user/logout"><i class="bi bi-box-arrow-right"></i> Log Out</a></li>
+                </ul>
+              </div>
+            <% } else { %>
+              <a href="/user/signin" class="btn btn-link text-decoration-none text-dark fw-semibold small px-2">Sign In</a>
+              <a href="/user/signup" class="btn btn-editorial-primary text-center">Get Started</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <section id="hero" class="py-5 py-lg-6">
+      <div class="container py-lg-4">
+        <div class="row align-items-center g-5">
+          <div class="col-12 col-lg-6 text-center text-lg-start">
+            <span class="eyebrow-text d-inline-block mb-3">Write. Publish. Discover.</span>
+            <h1 class="hero-headline mb-3">Your ideas deserve a place to be read.</h1>
+            <% if (locals.user) { %>
+              <p class="lead text-secondary mb-4 fs-5 mx-auto ms-lg-0" style="max-width: 520px;">
+                Welcome back, <strong><%= locals.user.fullName || locals.user.email %></strong>! Your creative studio is ready whenever inspiration strikes.
+              </p>
+              <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start gap-3 mb-4">
+                <a href="/user/dashboard" class="btn btn-editorial-primary px-4 py-2">Go to Dashboard</a>
+                <a href="#explore" class="btn btn-editorial-outline px-4 py-2">Explore Stories</a>
+              </div>
+            <% } else { %>
+              <p class="lead text-secondary mb-4 fs-5 mx-auto ms-lg-0" style="max-width: 520px;">
+                A modern home for writers, creators, and curious minds. Write effortlessly, publish beautifully, and build an audience around your ideas.
+              </p>
+              <form action="/user/signup" method="GET" class="mb-4 mx-auto ms-lg-0" style="max-width: 480px;">
+                <div class="input-group input-group-lg shadow-sm rounded-3 overflow-hidden border">
+                  <input type="email" name="email" class="form-control border-0 px-3 fs-6" placeholder="Enter your email address" required aria-label="Email address">
+                  <button class="btn btn-editorial-primary px-4 fs-6" type="submit">Start Writing</button>
+                </div>
+              </form>
+              <div class="d-flex align-items-center justify-content-center justify-content-lg-start gap-3">
+                <a href="#explore" class="btn btn-editorial-outline">Explore Articles</a>
+                <span class="text-muted small">No credit card required</span>
+              </div>
+            <% } %>
+          </div>
+          <div class="col-12 col-lg-6">
+            <div class="hero-mockup-frame">
+              <div class="mockup-header-bar">
+                <div class="mockup-dot"></div>
+                <div class="mockup-dot"></div>
+                <div class="mockup-dot"></div>
+                <span class="small text-muted ms-2" style="font-size: 0.75rem;">blog.preview / editorial</span>
+              </div>
+              <div class="mockup-cover-art p-4 text-center">
+                <div class="d-flex align-items-center gap-2 text-dark bg-white px-3 py-1 rounded-pill shadow-sm small">
+                  <i class="bi bi-book"></i>
+                  <span>Featured Read</span>
+                </div>
+              </div>
+              <div class="p-4 p-md-5">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="editorial-tag">Technology</span>
+                  <span class="text-muted small">·</span>
+                  <span class="text-muted small"><i class="bi bi-clock me-1"></i>6 min read</span>
+                </div>
+                <h2 class="h4 font-serif fw-bold text-dark mb-3" style="line-height: 1.35;">
+                  Designing Interfaces That Feel Effortless
+                </h2>
+                <p class="text-secondary small mb-4" style="line-height: 1.6;">
+                  "Good interfaces don't demand attention. They quietly guide people toward what matters, fading into the background of conscious thought."
+                </p>
+                <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                  <div class="d-flex align-items-center gap-2">
+                    <img src="/images/male-face.jpg" alt="Author avatar" width="36" height="36" class="rounded-circle object-fit-cover border">
+                    <div>
+                      <div class="fw-semibold small text-dark">Elena Rostova</div>
+                      <div class="text-muted" style="font-size: 0.75rem;">Staff Product Designer</div>
+                    </div>
+                  </div>
+                  <span class="text-muted small">Sep 8, 2026</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-4 border-top border-bottom bg-white">
+      <div class="container">
+        <div class="row align-items-center g-4 text-center text-md-start">
+          <div class="col-12 col-md-5">
+            <p class="text-muted mb-0 fw-medium font-serif fs-5">
+              Built for people who have something worth saying.
+            </p>
+          </div>
+          <div class="col-12 col-md-7">
+            <div class="row g-3 text-center">
+              <div class="col-4">
+                <div class="h3 fw-bold mb-0 text-dark">10K+</div>
+                <div class="text-muted small">Writers</div>
+              </div>
+              <div class="col-4 border-start border-end">
+                <div class="h3 fw-bold mb-0 text-dark">250K+</div>
+                <div class="text-muted small">Stories</div>
+              </div>
+              <div class="col-4">
+                <div class="h3 fw-bold mb-0 text-dark">1M+</div>
+                <div class="text-muted small">Readers</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-5 py-lg-6 bg-white border-top border-bottom">
+      <div class="container py-lg-3">
+        <div class="row align-items-center g-5">
+          <div class="col-12 col-lg-5">
+            <span class="eyebrow-text d-block mb-2">The Studio</span>
+            <h2 class="section-title mb-3">Everything you need to turn an idea into a story.</h2>
+            <p class="text-secondary mb-4">
+              From an initial rough note to a polished publication, our workspace stays quiet and responsive, giving your thinking room to breathe.
+            </p>
+            <ul class="list-unstyled d-flex flex-column gap-3 mb-4">
+              <li class="d-flex align-items-start gap-3">
+                <i class="bi bi-check2-circle text-success fs-5 mt-n1"></i>
+                <div>
+                  <strong class="text-dark d-block">Focused writing experience</strong>
+                  <span class="text-secondary small">A refined typographical canvas optimized for rhythm, pacing, and flow.</span>
+                </div>
+              </li>
+              <li class="d-flex align-items-start gap-3">
+                <i class="bi bi-check2-circle text-success fs-5 mt-n1"></i>
+                <div>
+                  <strong class="text-dark d-block">Beautiful publishing</strong>
+                  <span class="text-secondary small">Automatically formatted editorial layouts that look stunning on any screen.</span>
+                </div>
+              </li>
+              <li class="d-flex align-items-start gap-3">
+                <i class="bi bi-check2-circle text-success fs-5 mt-n1"></i>
+                <div>
+                  <strong class="text-dark d-block">Useful audience insights</strong>
+                  <span class="text-secondary small">Honest readership data including completion rates and organic reader referrals.</span>
+                </div>
+              </li>
+            </ul>
+            <a href="/pricing" class="btn btn-editorial-outline">Learn About Plans</a>
+          </div>
+          <div class="col-12 col-lg-7">
+            <div class="studio-mockup">
+              <div class="mockup-header-bar d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-1">
+                  <div class="mockup-dot"></div>
+                  <div class="mockup-dot"></div>
+                  <div class="mockup-dot"></div>
+                  <span class="small text-muted ms-2" style="font-size: 0.75rem;">studio / draft-editor</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-light text-muted border fw-normal small">Saved 2m ago</span>
+                  <button class="btn btn-dark btn-sm py-0 px-2" style="font-size: 0.75rem;">Publish</button>
+                </div>
+              </div>
+              <div class="row g-0">
+                <div class="col-12 col-md-4 studio-sidebar">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="small fw-bold text-uppercase text-muted" style="font-size: 0.7rem; letter-spacing: 0.05em;">Drafts (3)</span>
+                    <i class="bi bi-plus-lg text-muted small"></i>
+                  </div>
+                  <div class="d-flex flex-column gap-2">
+                    <div class="p-2 rounded bg-white border shadow-sm">
+                      <div class="fw-semibold text-dark small">The Quiet Power of Software</div>
+                      <div class="text-muted" style="font-size: 0.75rem;">Edited today</div>
+                    </div>
+                    <div class="p-2 rounded text-muted small">
+                      <div>Notes on Spatial Computing</div>
+                      <div class="text-muted" style="font-size: 0.75rem;">3 days ago</div>
+                    </div>
+                    <div class="p-2 rounded text-muted small">
+                      <div>The Architect's Ledger</div>
+                      <div class="text-muted" style="font-size: 0.75rem;">1 week ago</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-8 studio-editor-area">
+                  <div class="d-flex align-items-center gap-2 mb-3">
+                    <span class="badge bg-secondary-subtle text-secondary small">Technology &amp; Culture</span>
+                    <span class="text-muted small">·</span>
+                    <span class="text-muted small">840 words</span>
+                  </div>
+                  <h3 class="h4 font-serif fw-bold text-dark mb-3">The Quiet Power of Thoughtful Software</h3>
+                  <p class="text-secondary small mb-3" style="line-height: 1.7;">
+                    We are gradually discovering that speed without intention produces friction. When we strip away decorative noise, the remaining typography creates an intimacy between writer and reader that flashy interfaces can never duplicate.
+                  </p>
+                  <p class="text-secondary small mb-4" style="line-height: 1.7;">
+                    The challenge is not finding more tools, but choosing tools that respect the human mind's capacity for sustained focus...
+                  </p>
+                  <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                    <span class="badge text-bg-light border text-muted">#craft</span>
+                    <span class="badge text-bg-light border text-muted">#design</span>
+                    <span class="badge text-bg-light border text-muted">#culture</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="explore" class="py-5 py-lg-6">
+      <div class="container py-lg-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4">
+          <div>
+            <span class="eyebrow-text d-block mb-2">Curated Reading</span>
+            <h2 class="section-title mb-2">Discover something worth reading.</h2>
+            <p class="text-secondary fs-5 mb-0">
+              Thoughtful ideas from writers across technology, design, culture, and beyond.
+            </p>
+          </div>
+          <form action="/#explore" method="GET" class="d-flex align-items-center gap-2 mt-3 mt-md-0" style="min-width: 260px;">
+            <% if (selectedCategory && selectedCategory !== 'All') { %>
+              <input type="hidden" name="category" value="<%= selectedCategory %>">
+            <% } %>
+            <div class="input-group input-group-sm">
+              <input type="text" name="search" class="form-control" placeholder="Search stories..." value="<%= searchQuery || '' %>" aria-label="Search stories">
+              <button class="btn btn-editorial-outline" type="submit"><i class="bi bi-search"></i></button>
+            </div>
+            <% if (searchQuery || (selectedCategory && selectedCategory !== 'All')) { %>
+              <a href="/#explore" class="btn btn-sm btn-link text-muted p-0 text-decoration-none" title="Clear filter">
+                <i class="bi bi-x-circle fs-6"></i>
+              </a>
+            <% } %>
+          </form>
+        </div>
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-5">
+          <% const categories = ['All', 'Technology', 'Design', 'Culture', 'Business', 'Science', 'Productivity', 'Personal']; %>
+          <% categories.forEach(cat => { %>
+            <a href="/?category=<%= cat %><%= searchQuery ? '&search=' + encodeURIComponent(searchQuery) : '' %>#explore"
+               class="category-pill <%= selectedCategory === cat ? 'active' : '' %>">
+              <%= cat %>
+            </a>
+          <% }); %>
+        </div>
+        <% if (articles && articles.length > 0) { %>
+          <div class="row g-4">
+            <% articles.forEach(article => { %>
+              <div class="col-12 col-md-6 col-lg-4">
+                <article class="editorial-card h-100 d-flex flex-column overflow-hidden">
+                  <% if (article.coverImageURL) { %>
+                    <a href="/blog/<%= article._id %>" class="d-block overflow-hidden border-bottom" style="height: 180px;">
+                      <img src="<%= article.coverImageURL %>" alt="<%= article.title %>" class="w-100 h-100 object-fit-cover">
+                    </a>
+                  <% } %>
+                  <div class="p-4 d-flex flex-column flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <a href="/?category=<%= article.category || 'General' %>#explore" class="editorial-tag text-decoration-none">
+                        <%= article.category || 'General' %>
+                      </a>
+                      <span class="text-muted small">·</span>
+                      <% const wordCount = article.body ? article.body.trim().split(/\s+/).length : 0; %>
+                      <span class="text-muted small"><i class="bi bi-clock me-1"></i><%= Math.max(1, Math.ceil(wordCount / 200)) %> min read</span>
+                    </div>
+                    <h3 class="h5 font-serif fw-bold text-dark mb-2" style="line-height: 1.35;">
+                      <a href="/blog/<%= article._id %>" class="text-dark text-decoration-none"><%= article.title %></a>
+                    </h3>
+                    <p class="text-secondary small mb-4 flex-grow-1" style="line-height: 1.6;">
+                      <%= article.body ? article.body.replace(/[#*`_>]/g, '').substring(0, 120) + '...' : '' %>
+                    </p>
+                    <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-auto">
+                      <a href="/user/profile/<%= article.createdBy._id %>" class="d-flex align-items-center gap-2 text-decoration-none text-dark">
+                        <img src="<%= (article.createdBy && article.createdBy.profileImageURL) || '/images/male-face.jpg' %>" alt="Author avatar" width="30" height="30" class="rounded-circle object-fit-cover border">
+                        <div>
+                          <div class="fw-semibold small text-dark"><%= (article.createdBy && article.createdBy.fullName) || 'Author' %></div>
+                          <div class="text-muted" style="font-size: 0.72rem;">
+                            <%= new Date(article.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                          </div>
+                        </div>
+                      </a>
+                      <% if (article.likes && article.likes.length) { %>
+                        <span class="small text-muted"><i class="bi bi-heart-fill text-danger me-1"></i><%= article.likes.length %></span>
+                      <% } %>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <div class="editorial-card p-5 bg-white text-center">
+            <div class="feature-icon-wrapper mx-auto mb-3" style="width: 52px; height: 52px; font-size: 1.3rem;">
+              <i class="bi bi-journal-text text-secondary"></i>
+            </div>
+            <h3 class="h5 font-serif fw-bold text-dark mb-2">No published stories found</h3>
+            <p class="text-secondary small mx-auto mb-4" style="max-width: 440px;">
+              There are currently no public stories matching <%= (selectedCategory && selectedCategory !== 'All') ? 'category "' + selectedCategory + '"' : '' %><%= searchQuery ? ' query "' + searchQuery + '"' : 'your filter' %>.
+            </p>
+            <% if (locals.user) { %>
+              <a href="/blog/new" class="btn btn-editorial-primary btn-sm px-4">
+                <i class="bi bi-pencil-square me-1"></i> Write the First Story
+              </a>
+            <% } else { %>
+              <a href="/user/signup" class="btn btn-editorial-primary btn-sm px-4">
+                <i class="bi bi-feather me-1"></i> Start Writing Today
+              </a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </section>
+    <section class="py-5 py-lg-6">
+      <div class="container py-lg-4">
+        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+          <span class="eyebrow-text d-block mb-2">Voices</span>
+          <h2 class="section-title mb-2">Loved by independent writers.</h2>
+        </div>
+        <div class="row g-4 justify-content-center">
+          <div class="col-12 col-md-4">
+            <div class="editorial-card p-4 p-lg-4 h-100 d-flex flex-column justify-content-between">
+              <p class="testimonial-quote mb-4">
+                "Finally, a publishing platform that gets out of the way and lets me write."
+              </p>
+              <div class="d-flex align-items-center gap-2 border-top pt-3">
+                <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center small fw-semibold" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                  MC
+                </div>
+                <div>
+                  <div class="fw-semibold small text-dark">Maya Chen</div>
+                  <div class="text-muted" style="font-size: 0.75rem;">Independent Writer</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="editorial-card p-4 p-lg-4 h-100 d-flex flex-column justify-content-between">
+              <p class="testimonial-quote mb-4">
+                "The typography and reading rhythm are unmatched. Readers constantly comment on how pleasant the experience is."
+              </p>
+              <div class="d-flex align-items-center gap-2 border-top pt-3">
+                <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center small fw-semibold" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                  JR
+                </div>
+                <div>
+                  <div class="fw-semibold small text-dark">Julian Reed</div>
+                  <div class="text-muted" style="font-size: 0.75rem;">Essayist &amp; Designer</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="editorial-card p-4 p-lg-4 h-100 d-flex flex-column justify-content-between">
+              <p class="testimonial-quote mb-4">
+                "Simple, fast, and respectful of the craft. It feels like software built by people who genuinely care about literature."
+              </p>
+              <div class="d-flex align-items-center gap-2 border-top pt-3">
+                <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center small fw-semibold" style="width: 32px; height: 32px; font-size: 0.75rem;">
+                  PS
+                </div>
+                <div>
+                  <div class="fw-semibold small text-dark">Priya Sharma</div>
+                  <div class="text-muted" style="font-size: 0.75rem;">Tech Columnist</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-5 py-lg-6 bg-white border-top border-bottom text-center">
+      <div class="container py-lg-4">
+        <div class="mx-auto" style="max-width: 620px;">
+          <span class="eyebrow-text d-block mb-3">Begin Today</span>
+          <h2 class="section-title mb-3">Have something worth saying?</h2>
+          <p class="lead text-secondary mb-4 fs-5">
+            Start writing today and share your ideas with people who want to read them.
+          </p>
+          <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+            <% if (locals.user) { %>
+              <a href="/user/dashboard" class="btn btn-editorial-primary px-4 py-2">Go to Dashboard</a>
+              <a href="#explore" class="btn btn-editorial-outline px-4 py-2">Explore Stories</a>
+            <% } else { %>
+              <a href="/user/signup" class="btn btn-editorial-primary px-4 py-2">Start Writing</a>
+              <a href="/user/signin" class="btn btn-editorial-outline px-4 py-2">Sign In</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer id="about" class="footer-editorial py-5">
+    <div class="container">
+      <div class="row g-4 mb-5">
+        <div class="col-12 col-lg-4 text-center text-lg-start">
+          <a class="navbar-brand d-inline-flex align-items-center gap-2 mb-3 text-dark fw-bold" href="#hero">
+            <i class="bi bi-feather fs-5"></i>
+            <span>Blog App</span>
+          </a>
+          <p class="text-secondary small mb-3 mx-auto ms-lg-0" style="max-width: 320px;">
+            A modern home for ideas, stories, and independent voices. Designed for sustained attention.
+          </p>
+          <div class="d-flex align-items-center justify-content-center justify-content-lg-start gap-2">
+            <a href="#" class="social-icon-btn" aria-label="Follow on X (Twitter)">
+              <i class="bi bi-twitter-x"></i>
+            </a>
+            <a href="#" class="social-icon-btn" aria-label="Follow on LinkedIn">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a href="#" class="social-icon-btn" aria-label="Follow on GitHub">
+              <i class="bi bi-github"></i>
+            </a>
+            <a href="#" class="social-icon-btn" aria-label="Follow on Instagram">
+              <i class="bi bi-instagram"></i>
+            </a>
+          </div>
+        </div>
+        <div class="col-12 col-lg-8">
+          <div class="row g-4 text-center text-sm-start">
+            <div class="col-4">
+              <h4 class="h6 fw-bold text-dark mb-3 text-uppercase small" style="letter-spacing: 0.05em;">Product</h4>
+              <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                <li><a href="/features" class="footer-link">Features</a></li>
+                <li><a href="#explore" class="footer-link">Explore</a></li>
+                <li><a href="/pricing" class="footer-link">Pricing</a></li>
+                <li><a href="/user/signin" class="footer-link">Sign In</a></li>
+                <li><a href="/user/signup" class="footer-link">Sign Up</a></li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <h4 class="h6 fw-bold text-dark mb-3 text-uppercase small" style="letter-spacing: 0.05em;">Company</h4>
+              <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                <li><a href="/about" class="footer-link">About</a></li>
+                <li><a href="/about#contact" class="footer-link">Contact</a></li>
+              </ul>
+            </div>
+            <div class="col-4">
+              <h4 class="h6 fw-bold text-dark mb-3 text-uppercase small" style="letter-spacing: 0.05em;">Legal</h4>
+              <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                <li><a href="/privacy" class="footer-link">Privacy Policy</a></li>
+                <li><a href="/terms" class="footer-link">Terms of Service</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pt-4 border-top text-center text-muted small">
+        <p class="mb-0">&copy; 2026 Blog App. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+  <%- include('./partials/scripts') %>
+</body>
+</html>

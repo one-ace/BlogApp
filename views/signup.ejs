@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>Create Your Account — Blog App</title>
+  <style>
+    body {
+      min-height: 100vh;
+      background-color: var(--editorial-bg);
+    }
+    .signup-wrapper {
+      min-height: calc(100vh - 5rem);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+    }
+    .signup-card {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border: 1px solid var(--editorial-border);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      padding: 2.5rem 2.25rem;
+    }
+    .signup-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .signup-header h1 {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--editorial-text);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
+    }
+    .signup-header p {
+      color: var(--editorial-text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+    .form-label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--editorial-text);
+    }
+    .form-control {
+      border-radius: 8px;
+      border: 1px solid #d4d4d8;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.95rem;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .form-control:focus {
+      border-color: var(--editorial-accent);
+      box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.1);
+    }
+    .form-text {
+      font-size: 0.8rem;
+      color: #71717a;
+    }
+    .password-field {
+      position: relative;
+    }
+    .password-toggle {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #71717a;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+      letter-spacing: 0.05em;
+    }
+    .password-toggle:hover {
+      color: var(--editorial-text);
+    }
+    .btn-signup {
+      background: var(--editorial-accent);
+      border: 1px solid var(--editorial-accent);
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      width: 100%;
+      color: #ffffff;
+      transition: background-color 0.15s ease;
+    }
+    .btn-signup:hover {
+      background: #27272a;
+      border-color: #27272a;
+      color: #ffffff;
+    }
+    .signup-footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--editorial-text-muted);
+    }
+    .signup-footer a {
+      color: var(--editorial-accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .signup-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <%- include('./partials/nav') %>
+  <div class="signup-wrapper">
+    <div class="signup-card">
+      <div class="signup-header">
+        <h1>Create your account</h1>
+        <p>It only takes a minute to get started.</p>
+        <% if (typeof plan !== 'undefined' && plan && plan !== 'free') { %>
+          <div class="mt-2">
+            <span class="badge bg-dark text-white text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.05em;">Selected: <%= plan %> Plan</span>
+          </div>
+        <% } %>
+      </div>
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= error %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% } %>
+      <form action="/user/signup" method="post">
+        <div class="mb-3">
+          <label for="fullName" class="form-label">Full name</label>
+          <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Jane Doe" value="<%= typeof fullName !== 'undefined' ? fullName : '' %>" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="jane@example.com" value="<%= typeof email !== 'undefined' ? email : '' %>" required>
+          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="mb-4">
+          <label for="password" class="form-label">Password</label>
+          <div class="password-field">
+            <input type="password" name="password" class="form-control" id="password" placeholder="At least 8 characters" minlength="8" required>
+            <button type="button" class="password-toggle" id="togglePassword">SHOW</button>
+          </div>
+        </div>
+        <button type="submit" class="btn-signup">Sign up</button>
+      </form>
+      <div class="signup-footer">
+        Already have an account? <a href="/user/signin">Log in</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    const toggleBtn = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    if (toggleBtn && passwordInput) {
+      toggleBtn.addEventListener('click', () => {
+        const isHidden = passwordInput.type === 'password';
+        passwordInput.type = isHidden ? 'text' : 'password';
+        toggleBtn.textContent = isHidden ? 'HIDE' : 'SHOW';
+      });
+    }
+  </script>
+  <%- include('./partials/scripts') %>
+</body>
+</html>

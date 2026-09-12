@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>About &amp; Editorial Manifesto — Blog App</title>
+  <meta name="description" content="Learn about our mission, founding philosophy, and editorial principles: a calm, independent home for long-form ideas, essays, and human craft.">
+</head>
+<body class="bg-body-warm">
+  <%- include('./partials/nav') %>
+  <header class="py-5 py-lg-6 text-center border-bottom bg-white">
+    <div class="container py-lg-3">
+      <div class="mx-auto" style="max-width: 760px;">
+        <span class="eyebrow-text d-inline-block mb-2">Our Manifesto</span>
+        <h1 class="hero-headline mb-3" style="font-size: clamp(2.3rem, 4.5vw, 3.5rem);">
+          The internet became too noisy.<br>We built a quiet place for words.
+        </h1>
+        <p class="text-secondary fs-5 mb-4" style="line-height: 1.6;">
+          An independent publishing platform dedicated to clarity of thought, beautiful typography, and stories that deserve to endure beyond the news cycle.
+        </p>
+      </div>
+    </div>
+  </header>
+  <main class="py-5 py-lg-6">
+    <div class="container" style="max-width: 900px;">
+      <section class="mb-5 pb-lg-4">
+        <div class="editorial-card p-4 p-md-5 bg-white shadow-sm border">
+          <span class="eyebrow-text d-block mb-2">The Origin</span>
+          <h2 class="h3 font-serif fw-bold text-dark mb-4">Why We Started</h2>
+          <div class="article-markdown" style="font-size: 1.12rem; line-height: 1.8; color: #2d3139;">
+            <p>
+              Over the past decade, web publishing lost its way. The tools designed to share human ideas gradually surrendered to advertising surveillance, algorithmic outrage feeds, autoplay video players, and full-screen popups demanding email addresses before a reader could finish the opening sentence.
+            </p>
+            <p>
+              Writers found themselves optimizing for clicks and controversy rather than depth and nuance. Readers found themselves fatigued, skimming through fragmented snippets while their cognitive energy was siphoned away by engagement loops.
+            </p>
+            <blockquote class="my-4 ps-4 border-start border-3 border-dark fst-italic text-secondary">
+              "We believe writing is not mere content to be maximized for eyeball impressions. It is an architecture of human thought."
+            </blockquote>
+            <p>
+              We built <strong>Blog App</strong> as an intentional antidote. A clean, calm, and respectful digital space where essays, technical deep dives, design reflections, and investigative dispatches can breathe.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="mb-5 pb-lg-4">
+        <div class="text-center mx-auto mb-5" style="max-width: 600px;">
+          <span class="eyebrow-text d-block mb-2">Our Core Beliefs</span>
+          <h2 class="section-title mb-2">Four Guiding Principles</h2>
+          <p class="text-secondary small">The rules that govern every line of code and design decision we make.</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-12 col-md-6">
+            <div class="editorial-card p-4 p-lg-4 h-100 bg-white border d-flex flex-column">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="badge bg-dark text-white rounded-circle p-2" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;">1</span>
+                <h3 class="h5 font-serif fw-bold text-dark mb-0">Attention is Sacred</h3>
+              </div>
+              <p class="text-secondary small mb-0 flex-grow-1" style="line-height: 1.7;">
+                We never use infinite doomscroll feeds, algorithmic outrage ranking, or intrusive popups. We design for natural endpoints where readers can finish a piece, reflect, and close their browser in peace.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="editorial-card p-4 p-lg-4 h-100 bg-white border d-flex flex-column">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="badge bg-dark text-white rounded-circle p-2" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;">2</span>
+                <h3 class="h5 font-serif fw-bold text-dark mb-0">Writers Own Their Work</h3>
+              </div>
+              <p class="text-secondary small mb-0 flex-grow-1" style="line-height: 1.7;">
+                You retain 100% of your copyright, creative rights, and subscriber relationships. Everything is authored in portable, standard Markdown so you can migrate or backup your archive whenever you want.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="editorial-card p-4 p-lg-4 h-100 bg-white border d-flex flex-column">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="badge bg-dark text-white rounded-circle p-2" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;">3</span>
+                <h3 class="h5 font-serif fw-bold text-dark mb-0">Craft Over Speed</h3>
+              </div>
+              <p class="text-secondary small mb-0 flex-grow-1" style="line-height: 1.7;">
+                A rigorous, well-reasoned 2,000-word essay requires patience to draft, revise, and verify. We build editorial tools, markdown previewers, and reader ratios that reward craft over high-velocity spam.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="editorial-card p-4 p-lg-4 h-100 bg-white border d-flex flex-column">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="badge bg-dark text-white rounded-circle p-2" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;">4</span>
+                <h3 class="h5 font-serif fw-bold text-dark mb-0">Design Should Disappear</h3>
+              </div>
+              <p class="text-secondary small mb-0 flex-grow-1" style="line-height: 1.7;">
+                Software is at its best when it becomes invisible. Elegant font pairing (Newsreader + Plus Jakarta Sans), measured line lengths, and gentle warm contrast keep the reader fully immersed in the argument.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="mb-5 pb-lg-4">
+        <div class="editorial-card p-4 p-md-5 bg-white border shadow-sm">
+          <div class="row g-4 text-center">
+            <div class="col-6 col-md-3">
+              <div class="h2 font-serif fw-bold text-dark mb-1">35+</div>
+              <div class="text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Curated Essays</div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="h2 font-serif fw-bold text-dark mb-1">29</div>
+              <div class="text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Independent Authors</div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="h2 font-serif fw-bold text-dark mb-1">5</div>
+              <div class="text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Core Disciplines</div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="h2 font-serif fw-bold text-dark mb-1">100%</div>
+              <div class="text-secondary small text-uppercase" style="letter-spacing: 0.05em;">Independent &amp; Ad-Free</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="mb-5">
+        <div class="editorial-card p-4 p-md-5 bg-white border">
+          <div class="row align-items-center g-4">
+            <div class="col-12 col-md-8">
+              <span class="eyebrow-text d-block mb-2">Get in Touch</span>
+              <h3 class="h4 font-serif fw-bold text-dark mb-2">Have a question or editorial pitch?</h3>
+              <p class="text-secondary small mb-0" style="line-height: 1.6;">
+                We love hearing from writers, journalists, researchers, and engineers. Whether you want to propose a guest publication, report a bug, or just say hello:
+              </p>
+            </div>
+            <div class="col-12 col-md-4 text-md-end">
+              <a href="mailto:editorial@blogapp.io" class="btn btn-editorial-primary px-4 py-2">
+                <i class="bi bi-envelope me-1"></i> Contact Editorial
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="editorial-card p-5 text-center bg-dark text-white rounded-4 shadow-sm">
+        <div class="mx-auto" style="max-width: 580px;">
+          <h2 class="h2 font-serif mb-3 text-white">Join the conversation.</h2>
+          <p class="text-white-50 mb-4">
+            Write your perspective or explore insightful stories across technology, design, and culture today.
+          </p>
+          <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="/user/signup" class="btn btn-light fw-semibold px-4 py-2">Start Writing</a>
+            <a href="/#explore" class="btn btn-outline-light px-4 py-2">Explore Stories</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="footer py-5 border-top bg-white">
+    <div class="container">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="fw-bold font-serif text-dark fs-5">Blog App</span>
+          <span class="text-muted small ms-2">© 2026 Blog App Inc.</span>
+        </div>
+        <div class="d-flex gap-4 small flex-wrap justify-content-center">
+          <a href="/" class="footer-link">Home</a>
+          <a href="/features" class="footer-link">Features</a>
+          <a href="/pricing" class="footer-link">Pricing</a>
+          <a href="/about" class="footer-link fw-bold text-dark">About</a>
+          <a href="/privacy" class="footer-link">Privacy</a>
+          <a href="/terms" class="footer-link">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <%- include('./partials/scripts') %>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title><%= (article && article.title) ? 'Edit: ' + article.title : 'New Story' %> — Blog App</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body {
+      background-color: var(--editorial-bg);
+      min-height: 100vh;
+    }
+    .editor-topbar {
+      background-color: rgba(250, 249, 245, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--editorial-border);
+      position: sticky;
+      top: 0;
+      z-index: 1020;
+    }
+    .editor-canvas-card {
+      background: #ffffff;
+      border: 1px solid var(--editorial-border);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      padding: 3rem 3rem;
+    }
+    .editor-title-input {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3.5vw, 2.75rem);
+      font-weight: 600;
+      color: var(--editorial-text);
+      border: none;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      padding: 0;
+      line-height: 1.25;
+      margin-bottom: 1.25rem;
+    }
+    .editor-title-input::placeholder {
+      color: #a1a1aa;
+    }
+    .editor-body-textarea {
+      font-family: var(--font-sans);
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: #27272a;
+      border: none;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      resize: vertical;
+      min-height: 440px;
+      padding: 0;
+    }
+    .editor-body-textarea::placeholder {
+      color: #a1a1aa;
+      font-style: italic;
+    }
+    .editor-toolbar-btn {
+      background: transparent;
+      border: 1px solid #e4e4e7;
+      border-radius: 6px;
+      padding: 0.25rem 0.55rem;
+      font-size: 0.85rem;
+      color: #52525b;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+    .editor-toolbar-btn:hover {
+      background-color: #f4f4f5;
+      color: #18181b;
+      border-color: #d4d4d8;
+    }
+    .preview-canvas {
+      min-height: 440px;
+      padding: 1rem 0;
+    }
+    @media (max-width: 575.98px) {
+      .editor-canvas-card {
+        padding: 1.75rem 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <form id="editorForm" method="POST" enctype="multipart/form-data">
+    <% if (article && article._id) { %>
+      <input type="hidden" name="id" value="<%= article._id %>">
+    <% } %>
+    <header class="editor-topbar py-2">
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+          <a href="/user/dashboard" class="btn btn-sm btn-editorial-outline d-flex align-items-center gap-1">
+            <i class="bi bi-arrow-left"></i>
+            <span class="d-none d-sm-inline">Dashboard</span>
+          </a>
+          <div class="d-flex align-items-center gap-2">
+            <span class="small fw-semibold text-dark d-none d-md-inline">Writing Studio</span>
+            <span class="badge bg-light text-secondary border small">
+              <%= (article && article.status === 'PUBLISHED') ? 'Published Story' : 'Draft' %>
+            </span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button type="submit" formaction="/blog/draft" class="btn btn-editorial-outline btn-sm px-3">
+            <i class="bi bi-save me-1"></i>
+            <span>Save as Draft</span>
+          </button>
+          <button type="submit" formaction="/blog/publish" class="btn btn-editorial-primary btn-sm px-3">
+            <i class="bi bi-cloud-arrow-up me-1"></i>
+            <span><%= (article && article.status === 'PUBLISHED') ? 'Update Story' : 'Publish Story' %></span>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="py-5">
+      <div class="container" style="max-width: 880px;">
+        <div class="editor-canvas-card">
+          <div class="mb-4">
+            <% if (article && article.coverImageURL) { %>
+              <div class="position-relative mb-3 rounded-3 overflow-hidden border" style="max-height: 260px;">
+                <img src="<%= article.coverImageURL %>" id="coverPreview" alt="Story Cover" class="w-100 object-fit-cover" style="max-height: 260px;">
+              </div>
+            <% } else { %>
+              <div id="coverPreviewContainer" class="d-none position-relative mb-3 rounded-3 overflow-hidden border" style="max-height: 260px;">
+                <img id="coverPreview" alt="Story Cover Preview" class="w-100 object-fit-cover" style="max-height: 260px;">
+              </div>
+            <% } %>
+            <div class="d-flex align-items-center gap-2">
+              <label for="coverImageInput" class="btn btn-sm btn-editorial-outline d-inline-flex align-items-center gap-2">
+                <i class="bi bi-image"></i>
+                <span><%= (article && article.coverImageURL) ? 'Change Cover Photo' : 'Upload Cover Photo' %></span>
+              </label>
+              <input type="file" name="coverImage" id="coverImageInput" class="d-none" accept="image/*">
+              <span class="text-muted small">Max 3MB (JPEG, PNG, WebP)</span>
+            </div>
+          </div>
+          <input
+            type="text"
+            name="title"
+            id="storyTitle"
+            class="editor-title-input"
+            placeholder="Title of your story..."
+            value="<%= article ? article.title : '' %>"
+            required
+            autocomplete="off"
+            autofocus
+          >
+          <div class="row g-3 align-items-center pb-4 mb-4 border-bottom">
+            <div class="col-12 col-sm-6 col-md-5">
+              <label for="categorySelect" class="form-label small fw-semibold text-muted mb-1">Category</label>
+              <select name="category" id="categorySelect" class="form-select form-select-sm">
+                <% const categories = ['General', 'Technology', 'Design', 'Culture', 'Productivity', 'Business', 'Personal']; %>
+                <% categories.forEach(cat => { %>
+                  <option value="<%= cat %>" <%= (article && article.category === cat) ? 'selected' : '' %>><%= cat %></option>
+                <% }); %>
+              </select>
+            </div>
+            <div class="col-12 col-sm-6 col-md-7">
+              <label for="tagsInput" class="form-label small fw-semibold text-muted mb-1">Tags (comma separated)</label>
+              <input
+                type="text"
+                name="tags"
+                id="tagsInput"
+                class="form-control form-control-sm"
+                placeholder="e.g. design, craft, software"
+                value="<%= (article && article.tags && article.tags.length) ? article.tags.join(', ') : '' %>"
+              >
+            </div>
+          </div>
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3 pb-2 border-bottom">
+            <ul class="nav nav-pills gap-1" id="editorModeTabs" role="tablist">
+              <li class="nav-item">
+                <button type="button" class="nav-link active btn-sm py-1 px-3" id="writeTabBtn" onclick="switchMode('write')">
+                  <i class="bi bi-code me-1"></i> Write
+                </button>
+              </li>
+              <li class="nav-item">
+                <button type="button" class="nav-link btn-sm py-1 px-3" id="previewTabBtn" onclick="switchMode('preview')">
+                  <i class="bi bi-eye me-1"></i> Preview
+                </button>
+              </li>
+            </ul>
+            <div class="d-flex align-items-center gap-1" id="markdownToolbar">
+              <button type="button" class="editor-toolbar-btn" onclick="insertSyntax('**', '**')" title="Bold"><i class="bi bi-type-bold"></i></button>
+              <button type="button" class="editor-toolbar-btn" onclick="insertSyntax('*', '*')" title="Italic"><i class="bi bi-type-italic"></i></button>
+              <button type="button" class="editor-toolbar-btn" onclick="insertSyntax('## ', '')" title="Heading"><i class="bi bi-type-h2"></i></button>
+              <button type="button" class="editor-toolbar-btn" onclick="insertSyntax('> ', '')" title="Quote"><i class="bi bi-quote"></i></button>
+              <button type="button" class="editor-toolbar-btn" onclick="insertSyntax('`', '`')" title="Inline Code"><i class="bi bi-code-slash"></i></button>
+              <button type="button" class="editor-toolbar-btn" onclick="insertSyntax('- ', '')" title="Bullet List"><i class="bi bi-list-ul"></i></button>
+              <button type="button" class="editor-toolbar-btn" onclick="insertSyntax('[', '](https://)')" title="Link"><i class="bi bi-link-45deg"></i></button>
+            </div>
+          </div>
+          <div id="writeContainer">
+            <textarea
+              name="body"
+              id="storyBody"
+              class="editor-body-textarea"
+              placeholder="Tell your story... Markdown formatting is fully supported (e.g. ## Heading, **bold**, *italic*, > quotes)."
+            ><%= article ? article.body : '' %></textarea>
+          </div>
+          <div id="previewContainer" class="d-none">
+            <div id="markdownPreview" class="article-markdown preview-canvas"></div>
+          </div>
+          <div class="d-flex flex-wrap align-items-center justify-content-between pt-4 border-top text-muted small mt-4">
+            <div class="d-flex align-items-center gap-3">
+              <span><i class="bi bi-fonts me-1"></i><span id="wordCount">0</span> words</span>
+              <span>·</span>
+              <span><i class="bi bi-clock me-1"></i><span id="readTime">1</span> min read</span>
+            </div>
+            <div class="text-muted" style="font-size: 0.75rem;">
+              Markdown supported · Save as Draft or Publish at any time.
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </form>
+  <script>
+    const bodyInput = document.getElementById('storyBody');
+    const wordCountSpan = document.getElementById('wordCount');
+    const readTimeSpan = document.getElementById('readTime');
+    const writeContainer = document.getElementById('writeContainer');
+    const previewContainer = document.getElementById('previewContainer');
+    const markdownPreview = document.getElementById('markdownPreview');
+    const writeTabBtn = document.getElementById('writeTabBtn');
+    const previewTabBtn = document.getElementById('previewTabBtn');
+    const markdownToolbar = document.getElementById('markdownToolbar');
+    function updateStats() {
+      if (!bodyInput) return;
+      const text = bodyInput.value.trim();
+      const words = text ? text.split(/\s+/).length : 0;
+      wordCountSpan.textContent = words;
+      readTimeSpan.textContent = Math.max(1, Math.ceil(words / 200));
+    }
+    if (bodyInput) {
+      bodyInput.addEventListener('input', updateStats);
+      updateStats();
+    }
+    // Switch between Write and Preview mode
+    function switchMode(mode) {
+      if (mode === 'preview') {
+        writeContainer.classList.add('d-none');
+        previewContainer.classList.remove('d-none');
+        writeTabBtn.classList.remove('active');
+        previewTabBtn.classList.add('active');
+        markdownToolbar.classList.add('d-none');
+        const rawMarkdown = bodyInput.value || '*No content written yet.*';
+        markdownPreview.innerHTML = marked.parse(rawMarkdown);
+      } else {
+        previewContainer.classList.add('d-none');
+        writeContainer.classList.remove('d-none');
+        previewTabBtn.classList.remove('active');
+        writeTabBtn.classList.add('active');
+        markdownToolbar.classList.remove('d-none');
+      }
+    }
+    // Insert Markdown syntax into textarea at cursor position
+    function insertSyntax(before, after) {
+      if (!bodyInput) return;
+      const start = bodyInput.selectionStart;
+      const end = bodyInput.selectionEnd;
+      const selected = bodyInput.value.substring(start, end);
+      const replacement = before + (selected || 'text') + after;
+      bodyInput.value = bodyInput.value.substring(0, start) + replacement + bodyInput.value.substring(end);
+      bodyInput.focus();
+      bodyInput.setSelectionRange(start + before.length, start + replacement.length - after.length);
+      updateStats();
+    }
+    // Cover Image instant client preview
+    const coverInput = document.getElementById('coverImageInput');
+    const coverPreview = document.getElementById('coverPreview');
+    const coverContainer = document.getElementById('coverPreviewContainer');
+    if (coverInput) {
+      coverInput.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            coverPreview.src = e.target.result;
+            if (coverContainer) coverContainer.classList.remove('d-none');
+          };
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+    }
+  </script>
+  <%- include('./partials/scripts') %>
+</body>
+</html>

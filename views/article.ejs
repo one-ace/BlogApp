@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title><%= article.title %> — Blog App</title>
+</head>
+<body class="bg-white">
+  <%- include('./partials/nav') %>
+  <main class="py-5">
+    <article class="container" style="max-width: 800px;">
+      <div class="mb-4">
+        <a href="/" class="text-decoration-none text-muted small d-inline-flex align-items-center gap-1">
+          <i class="bi bi-arrow-left"></i> Back to all stories
+        </a>
+      </div>
+      <header class="mb-4">
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <a href="/?category=<%= article.category || 'General' %>" class="editorial-tag text-decoration-none">
+            <%= article.category || 'General' %>
+          </a>
+          <span class="text-muted small">·</span>
+          <% const wordCount = article.body ? article.body.trim().split(/\s+/).length : 0; %>
+          <% const readTime = Math.max(1, Math.ceil(wordCount / 200)); %>
+          <span class="text-muted small"><i class="bi bi-clock me-1"></i><%= readTime %> min read</span>
+          <% if (article.status === 'DRAFT') { %>
+            <span class="badge bg-warning-subtle text-warning-emphasis border border-warning small ms-2">DRAFT PREVIEW</span>
+          <% } %>
+        </div>
+        <h1 class="hero-headline mb-4" style="font-size: clamp(2.2rem, 4vw, 3.25rem);">
+          <%= article.title %>
+        </h1>
+        <div class="d-flex align-items-center justify-content-between pt-3 pb-3 border-top border-bottom">
+          <div class="d-flex align-items-center gap-3">
+            <a href="/user/profile/<%= article.createdBy._id %>">
+              <img src="<%= (article.createdBy && article.createdBy.profileImageURL) || '/images/male-face.jpg' %>" alt="Author" width="46" height="46" class="rounded-circle object-fit-cover border shadow-sm">
+            </a>
+            <div>
+              <a href="/user/profile/<%= article.createdBy._id %>" class="fw-bold text-dark text-decoration-none">
+                <%= (article.createdBy && article.createdBy.fullName) || 'Author' %>
+              </a>
+              <div class="text-muted small">
+                Published on <%= new Date(article.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <% if (locals.user && (locals.user._id.toString() === article.createdBy._id.toString() || locals.user.role === 'ADMIN')) { %>
+              <a href="/blog/edit/<%= article._id %>" class="btn btn-editorial-outline btn-sm">
+                <i class="bi bi-pencil me-1"></i> Edit
+              </a>
+              <a href="/user/dashboard" class="btn btn-editorial-outline btn-sm">
+                <i class="bi bi-speedometer2 me-1"></i> Studio
+              </a>
+            <% } %>
+          </div>
+        </div>
+      </header>
+      <% if (article.coverImageURL) { %>
+        <div class="mb-5 rounded-4 overflow-hidden border shadow-sm" style="max-height: 420px;">
+          <img src="<%= article.coverImageURL %>" alt="<%= article.title %>" class="w-100 object-fit-cover" style="max-height: 420px;">
+        </div>
+      <% } %>
+      <section class="article-markdown py-2">
+        <%- parsedBody %>
+      </section>
+      <% if (article.tags && article.tags.length) { %>
+        <div class="d-flex flex-wrap gap-2 pt-4 border-top mt-5">
+          <% article.tags.forEach(tag => { %>
+            <a href="/?search=<%= encodeURIComponent(tag) %>" class="badge text-bg-light border text-muted px-2 py-1 text-decoration-none">
+              #<%= tag %>
+            </a>
+          <% }); %>
+        </div>
+      <% } %>
+      <div id="like-section" class="d-flex align-items-center justify-content-between p-3 rounded-3 bg-light border my-5">
+        <div class="d-flex align-items-center gap-3">
+          <% if (locals.user) { %>
+            <form action="/blog/<%= article._id %>/like" method="POST" class="d-inline">
+              <button type="submit" class="btn-clap <%= isLiked ? 'active' : '' %>" title="<%= isLiked ? 'Unlike story' : 'Clap for this story' %>">
+                <i class="bi <%= isLiked ? 'bi-heart-fill' : 'bi-heart' %>"></i>
+                <span><%= (article.likes && article.likes.length) || 0 %> <%= ((article.likes && article.likes.length) === 1) ? 'Like' : 'Likes' %></span>
+              </button>
+            </form>
+          <% } else { %>
+            <a href="/user/signin" class="btn-clap text-decoration-none" title="Sign in to like">
+              <i class="bi bi-heart"></i>
+              <span><%= (article.likes && article.likes.length) || 0 %> Likes</span>
+            </a>
+          <% } %>
+          <a href="#comments" class="text-muted small text-decoration-none">
+            <i class="bi bi-chat-left-text me-1"></i> <%= (comments && comments.length) || 0 %> <%= ((comments && comments.length) === 1) ? 'comment' : 'comments' %>
+          </a>
+        </div>
+        <div>
+          <button class="btn btn-sm btn-editorial-outline" onclick="navigator.clipboard.writeText(window.location.href); alert('Story link copied to clipboard!');" title="Share Story">
+            <i class="bi bi-share me-1"></i> Share
+          </button>
+        </div>
+      </div>
+      <div class="editorial-card p-4 bg-light mb-5 d-flex flex-column flex-sm-row align-items-center align-items-sm-start gap-3">
+        <a href="/user/profile/<%= article.createdBy._id %>">
+          <img src="<%= (article.createdBy && article.createdBy.profileImageURL) || '/images/male-face.jpg' %>" alt="Author" width="64" height="64" class="rounded-circle object-fit-cover border shadow-sm">
+        </a>
+        <div class="text-center text-sm-start flex-grow-1">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-sm-start gap-2 mb-1">
+            <h2 class="h6 fw-bold text-dark mb-0">
+              <a href="/user/profile/<%= article.createdBy._id %>" class="text-dark text-decoration-none">
+                <%= (article.createdBy && article.createdBy.fullName) || 'Independent Writer' %>
+              </a>
+            </h2>
+            <span class="badge bg-secondary-subtle text-secondary small">Author</span>
+          </div>
+          <p class="text-muted small mb-2">
+            <%= (article.createdBy && article.createdBy.bio) || 'Writing on craft, ideas, and thoughtful stories on Blog App.' %>
+          </p>
+          <a href="/user/profile/<%= article.createdBy._id %>" class="small fw-semibold text-dark">
+            View full profile &amp; stories <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <section id="comments" class="pt-4 border-top">
+        <h3 class="h4 font-serif fw-bold text-dark mb-4">
+          Discussion (<%= (comments && comments.length) || 0 %>)
+        </h3>
+        <% if (locals.user) { %>
+          <div class="editorial-card p-4 bg-white mb-4">
+            <form action="/blog/<%= article._id %>/comment" method="POST">
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <img src="<%= locals.user.profileImageURL || '/images/male-face.jpg' %>" alt="User avatar" width="28" height="28" class="rounded-circle object-fit-cover border">
+                <span class="small fw-semibold text-dark"><%= locals.user.fullName || locals.user.email %></span>
+              </div>
+              <textarea name="content" class="form-control mb-3" rows="3" placeholder="Join the discussion... Share your thoughts respectfully." required></textarea>
+              <div class="text-end">
+                <button type="submit" class="btn btn-editorial-primary btn-sm px-4">Post Comment</button>
+              </div>
+            </form>
+          </div>
+        <% } else { %>
+          <div class="p-4 rounded-3 border bg-light text-center mb-4">
+            <p class="text-secondary small mb-2">Have a question or insight to share on this story?</p>
+            <a href="/user/signin" class="btn btn-editorial-outline btn-sm px-3">Sign in to leave a comment</a>
+          </div>
+        <% } %>
+        <% if (comments && comments.length > 0) { %>
+          <div class="d-flex flex-column gap-3">
+            <% comments.forEach(comment => { %>
+              <div class="comment-card">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <img src="<%= (comment.createdBy && comment.createdBy.profileImageURL) || '/images/male-face.jpg' %>" alt="Commenter" width="30" height="30" class="rounded-circle object-fit-cover border">
+                    <span class="fw-semibold small text-dark"><%= (comment.createdBy && comment.createdBy.fullName) || 'Reader' %></span>
+                  </div>
+                  <span class="text-muted" style="font-size: 0.75rem;">
+                    <%= new Date(comment.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+                  </span>
+                </div>
+                <p class="text-secondary small mb-0" style="line-height: 1.6; white-space: pre-wrap;"><%= comment.content %></p>
+              </div>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <div class="text-center py-4 text-muted small">
+            <i class="bi bi-chat-dots fs-3 d-block mb-2 text-secondary"></i>
+            Be the first to share your thoughts on this story.
+          </div>
+        <% } %>
+      </section>
+    </article>
+  </main>
+  <footer class="footer-editorial py-4 mt-5">
+    <div class="container text-center text-muted small">
+      <p class="mb-0">&copy; 2026 Blog App. All rights reserved.</p>
+    </div>
+  </footer>
+  <%- include('./partials/scripts') %>
+</body>
+</html>

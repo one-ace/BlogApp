@@ -1,0 +1,64 @@
+<nav class="navbar navbar-expand-lg navbar-editorial sticky-top">
+  <div class="container py-1">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+      <span>Blog App</span>
+    </a>
+    <button class="navbar-toggler border-0 p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="bi bi-list fs-3 text-dark"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/features">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/#explore">Explore</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/pricing">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
+        <% if (locals.user) { %>
+          <li class="nav-item dropdown">
+            <a class="d-flex align-items-center gap-2 text-decoration-none py-1 px-2 rounded-3 border bg-white shadow-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+              <img src="<%= locals.user.profileImageURL || '/images/male-face.jpg' %>" alt="Profile" width="30" height="30" class="rounded-circle object-fit-cover border">
+              <span class="small fw-semibold text-dark"><%= locals.user.fullName || locals.user.email %></span>
+              <i class="bi bi-chevron-down small text-muted" style="font-size:0.7rem;"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border mt-2">
+              <li><div class="dropdown-header text-truncate" style="max-width: 200px;"><%= locals.user.email %></div></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item d-flex align-items-center gap-2" href="/user/dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+              <li><a class="dropdown-item d-flex align-items-center gap-2" href="/user/edit-profile"><i class="bi bi-person-gear"></i> Edit Profile</a></li>
+              <li><a class="dropdown-item d-flex align-items-center gap-2" href="/#explore"><i class="bi bi-compass"></i> Explore Stories</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item d-flex align-items-center gap-2 text-danger" href="/user/logout"><i class="bi bi-box-arrow-right"></i> Log Out</a></li>
+            </ul>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="btn btn-link text-decoration-none text-dark fw-semibold small px-2" href="/user/signin">Sign In</a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-editorial-primary text-center" href="/user/signup">Get Started</a>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>
+<% if (locals.error) { %>
+<div class="container mt-4">
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <%= locals.error %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+</div>
+<% } %>
