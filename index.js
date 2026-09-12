@@ -13,14 +13,19 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/blog';
 
+app.set('trust proxy', 1);
+
 function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+mongoose.connection.on('connected', () => console.log('DB Connected'));
+mongoose.connection.on('error', (err) => console.error('MongoDB connection error:', err));
+mongoose.connection.on('disconnected', () => console.warn('MongoDB disconnected'));
+
 mongoose
   .connect(MONGO_URI)
-  .then(() => console.log('DB Connected'))
-  .catch((err) => console.error('MongoDB connection error:', err));
+  .catch((err) => console.error('MongoDB initial connection error:', err));
 
 app.set('view engine', 'ejs');
 app.set('views', path.resolve('./views'));
