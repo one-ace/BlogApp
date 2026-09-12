@@ -88,40 +88,75 @@
             <% } %>
           </div>
           <div class="col-12 col-lg-6">
-            <div class="hero-mockup-frame">
-              <div class="mockup-header-bar">
-                <div class="mockup-dot"></div>
-                <div class="mockup-dot"></div>
-                <div class="mockup-dot"></div>
-                <span class="small text-muted ms-2" style="font-size: 0.75rem;">blog.preview / editorial</span>
-              </div>
-              <div class="mockup-cover-art p-4 text-center">
-                <div class="d-flex align-items-center gap-2 text-dark bg-white px-3 py-1 rounded-pill shadow-sm small">
-                  <i class="bi bi-book"></i>
-                  <span>Featured Read</span>
+            <div class="hero-mockup-frame" id="featured-hero-frame">
+              <div class="mockup-header-bar d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-1">
+                  <div class="mockup-dot"></div>
+                  <div class="mockup-dot"></div>
+                  <div class="mockup-dot"></div>
+                  <span class="small text-muted ms-2" style="font-size: 0.75rem;">blog.preview / featured-read</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="featured-timer-badge" id="featured-timer-badge" title="Featured read rotates automatically every 5 minutes with seeded stories">
+                    <i class="bi bi-arrow-repeat me-1"></i>
+                    <span id="featured-timer-display">5:00</span>
+                  </span>
+                  <div class="btn-group btn-group-sm" role="group" aria-label="Cycle featured stories">
+                    <button type="button" class="btn btn-outline-secondary btn-nav-featured" id="prev-featured-btn" title="Previous seeded feature" aria-label="Previous seeded story">
+                      <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-nav-featured" id="next-featured-btn" title="Next seeded feature" aria-label="Next seeded story">
+                      <i class="bi bi-chevron-right"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div class="p-4 p-md-5">
-                <div class="d-flex align-items-center gap-2 mb-3">
-                  <span class="editorial-tag">Technology</span>
-                  <span class="text-muted small">·</span>
-                  <span class="text-muted small"><i class="bi bi-clock me-1"></i>6 min read</span>
+
+              <!-- Animated wrapper for crossfade -->
+              <div id="featured-card-content" class="featured-card-transition">
+                <div class="mockup-cover-art position-relative overflow-hidden" id="featured-cover-container" style="<%= (locals.featuredBlog && locals.featuredBlog.coverImageURL) ? 'background-image: url(\'' + locals.featuredBlog.coverImageURL + '\');' : '' %>">
+                  <div class="mockup-cover-overlay"></div>
+                  <div class="position-relative z-1 d-flex flex-column align-items-center justify-content-center p-3 text-center w-100">
+                    <div class="d-inline-flex align-items-center gap-2 bg-white text-dark px-3 py-1 rounded-pill shadow-sm small fw-semibold mb-1">
+                      <i class="bi bi-stars text-warning"></i>
+                      <span>Featured Read</span>
+                    </div>
+                    <span class="small text-white text-shadow-sm opacity-75" style="font-size: 0.72rem;">Curated from Editorial Seeds</span>
+                  </div>
                 </div>
-                <h2 class="h4 font-serif fw-bold text-dark mb-3" style="line-height: 1.35;">
-                  Designing Interfaces That Feel Effortless
-                </h2>
-                <p class="text-secondary small mb-4" style="line-height: 1.6;">
-                  "Good interfaces don't demand attention. They quietly guide people toward what matters, fading into the background of conscious thought."
-                </p>
-                <div class="d-flex align-items-center justify-content-between pt-3 border-top">
-                  <div class="d-flex align-items-center gap-2">
-                    <img src="/images/male-face.jpg" alt="Author avatar" width="36" height="36" class="rounded-circle object-fit-cover border">
-                    <div>
-                      <div class="fw-semibold small text-dark">Elena Rostova</div>
-                      <div class="text-muted" style="font-size: 0.75rem;">Staff Product Designer</div>
+
+                <div class="p-4 p-md-5">
+                  <div class="d-flex align-items-center gap-2 mb-3">
+                    <a href="/?category=<%= (locals.featuredBlog && locals.featuredBlog.category) || 'General' %>#explore" class="editorial-tag text-decoration-none" id="featured-category-pill">
+                      <%= (locals.featuredBlog && locals.featuredBlog.category) || 'Technology' %>
+                    </a>
+                    <span class="text-muted small">·</span>
+                    <span class="text-muted small" id="featured-read-time">
+                      <i class="bi bi-clock me-1"></i><%= (locals.featuredBlog && locals.featuredBlog.readTime) || '5 min read' %>
+                    </span>
+                  </div>
+                  <h2 class="h4 font-serif fw-bold text-dark mb-3" style="line-height: 1.35;">
+                    <a href="/blog/<%= (locals.featuredBlog && locals.featuredBlog._id) ? locals.featuredBlog._id : '#' %>" class="text-dark text-decoration-none hover-editorial-title" id="featured-title-link">
+                      <%= (locals.featuredBlog && locals.featuredBlog.title) || 'Designing Interfaces That Feel Effortless' %>
+                    </a>
+                  </h2>
+                  <p class="text-secondary small mb-4" style="line-height: 1.6;" id="featured-excerpt">
+                    "<%= (locals.featuredBlog && locals.featuredBlog.excerpt) || 'Good interfaces don\'t demand attention. They quietly guide people toward what matters, fading into the background of conscious thought.' %>"
+                  </p>
+                  <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                    <a href="/user/profile/<%= (locals.featuredBlog && locals.featuredBlog.createdBy && locals.featuredBlog.createdBy._id) || '#' %>" class="d-flex align-items-center gap-2 text-decoration-none text-dark" id="featured-author-link">
+                      <img src="<%= (locals.featuredBlog && locals.featuredBlog.createdBy && locals.featuredBlog.createdBy.profileImageURL) || '/images/male-face.jpg' %>" alt="Author avatar" width="38" height="38" class="rounded-circle object-fit-cover border" id="featured-author-img">
+                      <div>
+                        <div class="fw-semibold small text-dark" id="featured-author-name"><%= (locals.featuredBlog && locals.featuredBlog.createdBy && locals.featuredBlog.createdBy.fullName) || 'Editorial Author' %></div>
+                        <div class="text-muted text-truncate" style="font-size: 0.75rem; max-width: 170px;" id="featured-author-bio"><%= (locals.featuredBlog && locals.featuredBlog.createdBy && (locals.featuredBlog.createdBy.bio || locals.featuredBlog.createdBy.location)) || 'Staff Writer' %></div>
+                      </div>
+                    </a>
+                    <div class="d-flex align-items-center gap-2">
+                      <a href="/blog/<%= (locals.featuredBlog && locals.featuredBlog._id) ? locals.featuredBlog._id : '#' %>" class="btn btn-sm btn-editorial-outline px-3" id="featured-read-btn">
+                        Read Story <i class="bi bi-arrow-right ms-1"></i>
+                      </a>
                     </div>
                   </div>
-                  <span class="text-muted small">Sep 8, 2026</span>
                 </div>
               </div>
             </div>
@@ -490,5 +525,166 @@
     </div>
   </footer>
   <%- include('./partials/scripts') %>
+  <script>
+    (function() {
+      let nextSwapAt = <%= (locals.featuredMeta && locals.featuredMeta.nextSwapAt) ? locals.featuredMeta.nextSwapAt : 'Date.now() + 300000' %>;
+      let currentIndex = <%= (locals.featuredMeta && typeof locals.featuredMeta.currentIndex === 'number') ? locals.featuredMeta.currentIndex : 0 %>;
+      const intervalMinutes = <%= (locals.featuredMeta && locals.featuredMeta.intervalMinutes) ? locals.featuredMeta.intervalMinutes : 5 %>;
+      const intervalMs = intervalMinutes * 60 * 1000;
+      let isTransitioning = false;
+
+      const timerDisplay = document.getElementById('featured-timer-display');
+      const timerBadge = document.getElementById('featured-timer-badge');
+      const contentContainer = document.getElementById('featured-card-content');
+      const coverContainer = document.getElementById('featured-cover-container');
+      const categoryPill = document.getElementById('featured-category-pill');
+      const readTime = document.getElementById('featured-read-time');
+      const titleLink = document.getElementById('featured-title-link');
+      const excerpt = document.getElementById('featured-excerpt');
+      const authorLink = document.getElementById('featured-author-link');
+      const authorImg = document.getElementById('featured-author-img');
+      const authorName = document.getElementById('featured-author-name');
+      const authorBio = document.getElementById('featured-author-bio');
+      const readBtn = document.getElementById('featured-read-btn');
+      const prevBtn = document.getElementById('prev-featured-btn');
+      const nextBtn = document.getElementById('next-featured-btn');
+
+      function updateTimer() {
+        const now = Date.now();
+        const diff = Math.max(0, nextSwapAt - now);
+        const totalSec = Math.floor(diff / 1000);
+        const mins = Math.floor(totalSec / 60);
+        const secs = totalSec % 60;
+        if (timerDisplay) {
+          timerDisplay.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+
+        if (diff <= 0 && !isTransitioning) {
+          fetchAndSwapFeatured();
+        }
+      }
+
+      async function fetchAndSwapFeatured(indexParam = null, actionParam = null) {
+        if (isTransitioning) return;
+        isTransitioning = true;
+
+        if (timerBadge) timerBadge.classList.add('refreshing');
+
+        try {
+          let url = '/api/featured-blog';
+          const params = new URLSearchParams();
+          if (indexParam !== null) {
+            params.set('index', indexParam);
+          } else if (actionParam) {
+            params.set('action', actionParam);
+          }
+          const queryString = params.toString();
+          if (queryString) url += '?' + queryString;
+
+          const res = await fetch(url);
+          const data = await res.json();
+
+          if (data && data.success && data.blog) {
+            applyBlogUpdate(data.blog);
+            if (data.nextSwapAt) {
+              nextSwapAt = data.nextSwapAt;
+            } else {
+              nextSwapAt = Date.now() + intervalMs;
+            }
+            if (typeof data.currentIndex === 'number') {
+              currentIndex = data.currentIndex;
+            }
+          }
+        } catch (err) {
+          console.warn('[FeaturedRead] Auto-swap error:', err);
+          nextSwapAt = Date.now() + 30000;
+        } finally {
+          setTimeout(() => {
+            if (timerBadge) timerBadge.classList.remove('refreshing');
+            isTransitioning = false;
+          }, 400);
+        }
+      }
+
+      function applyBlogUpdate(blog) {
+        if (!contentContainer) return;
+
+        // Fade out transition
+        contentContainer.classList.add('featured-fading');
+
+        setTimeout(() => {
+          // Update cover
+          if (coverContainer) {
+            if (blog.coverImageURL) {
+              coverContainer.style.backgroundImage = 'url("' + blog.coverImageURL + '")';
+            } else {
+              coverContainer.style.backgroundImage = 'none';
+            }
+          }
+
+          // Category
+          if (categoryPill) {
+            categoryPill.textContent = blog.category || 'General';
+            categoryPill.href = '/?category=' + encodeURIComponent(blog.category || 'General') + '#explore';
+          }
+
+          // Read time
+          if (readTime) {
+            readTime.innerHTML = '<i class="bi bi-clock me-1"></i>' + (blog.readTime || '5 min read');
+          }
+
+          // Title
+          if (titleLink) {
+            titleLink.textContent = blog.title || '';
+            titleLink.href = '/blog/' + blog._id;
+          }
+
+          // Excerpt
+          if (excerpt) {
+            excerpt.textContent = '"' + (blog.excerpt || '') + '"';
+          }
+
+          // Author info
+          if (authorLink) {
+            authorLink.href = blog.createdBy?._id ? '/user/profile/' + blog.createdBy._id : '#';
+          }
+          if (authorImg) {
+            authorImg.src = blog.createdBy?.profileImageURL || '/images/male-face.jpg';
+          }
+          if (authorName) {
+            authorName.textContent = blog.createdBy?.fullName || 'Editorial Staff';
+          }
+          if (authorBio) {
+            authorBio.textContent = blog.createdBy?.bio || blog.createdBy?.location || 'Staff Contributor';
+          }
+
+          // Read story button
+          if (readBtn) {
+            readBtn.href = '/blog/' + blog._id;
+          }
+
+          // Fade back in
+          contentContainer.classList.remove('featured-fading');
+        }, 260);
+      }
+
+      // Manual navigation
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          fetchAndSwapFeatured(null, 'prev');
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          fetchAndSwapFeatured(null, 'next');
+        });
+      }
+
+      setInterval(updateTimer, 1000);
+      updateTimer();
+    })();
+  </script>
 </body>
 </html>

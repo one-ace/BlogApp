@@ -194,21 +194,84 @@ body {
 .mockup-dot:nth-child(3) { background-color: #86efac; }
 
 .mockup-cover-art {
-  height: 180px;
-  background: linear-gradient(135deg, #e4e4e7 0%, #d4d4d8 100%);
+  height: 190px;
+  background: linear-gradient(135deg, #27272a 0%, #18181b 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #71717a;
+  color: #ffffff;
   position: relative;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
 }
 
-.mockup-cover-art::after {
-  content: "";
+.mockup-cover-overlay {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(45deg, transparent, transparent 15px, rgba(255,255,255,0.2) 15px, rgba(255,255,255,0.2) 30px);
+  background: linear-gradient(180deg, rgba(24, 24, 27, 0.4) 0%, rgba(24, 24, 27, 0.75) 100%);
+  pointer-events: none;
+}
+
+.text-shadow-sm {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.featured-card-transition {
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  will-change: opacity, transform;
+}
+
+.featured-card-transition.featured-fading {
+  opacity: 0.08;
+  transform: translateY(4px) scale(0.995);
+}
+
+.featured-timer-badge {
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: #71717a;
+  background-color: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.featured-timer-badge i {
+  font-size: 0.725rem;
+  transition: transform 0.6s ease;
+}
+
+.featured-timer-badge.refreshing i {
+  transform: rotate(360deg);
+}
+
+.btn-nav-featured {
+  border-color: #e4e4e7;
+  color: #71717a;
+  background-color: #faf9f6;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.45rem;
+  line-height: 1.2;
+}
+
+.btn-nav-featured:hover {
+  background-color: #27272a;
+  border-color: #27272a;
+  color: #ffffff;
+}
+
+.hover-editorial-title {
+  transition: color 0.18s ease;
+}
+
+.hover-editorial-title:hover {
+  color: #4f46e5 !important;
 }
 
 /* Mockup: Studio Editor Showcase */

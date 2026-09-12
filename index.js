@@ -12,6 +12,7 @@ const userRoute = require('./routes/user');
 const blogRoute = require('./routes/blog');
 const Blog = require('./models/blog');
 const { checkForAuthenticationCookie } = require('./middlewares/authentication');
+const featuredService = require('./services/featuredService');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -55,6 +56,34 @@ app.use(checkForAuthenticationCookie('token'));
 app.use('/user', userRoute);
 app.use('/blog', blogRoute);
 
+app.get('/api/featured-blog', async (req, res) => {
+  try {
+    const { index, offset, action } = req.query;
+    let data;
+
+    if (index !== undefined && index !== '') {
+      data = await featuredService.getFeaturedBlogByIndex(parseInt(index, 10) || 0);
+    } else if (action === 'next') {
+      const current = await featuredService.getCurrentFeaturedBlog();
+      const nextIndex = (current.currentIndex + 1) % (current.totalCount || 1);
+      data = await featuredService.getFeaturedBlogByIndex(nextIndex);
+    } else if (action === 'prev') {
+      const current = await featuredService.getCurrentFeaturedBlog();
+      const prevIndex = (current.currentIndex - 1 + (current.totalCount || 1)) % (current.totalCount || 1);
+      data = await featuredService.getFeaturedBlogByIndex(prevIndex);
+    } else if (offset !== undefined && offset !== '') {
+      data = await featuredService.getCurrentFeaturedBlog(parseInt(offset, 10) || 0);
+    } else {
+      data = await featuredService.getCurrentFeaturedBlog();
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching featured blog:', error);
+    res.status(500).json({ success: false, message: 'Failed to retrieve featured blog' });
+  }
+});
+
 app.get('/', async (req, res) => {
   try {
     const category = req.query.category;
@@ -74,16 +103,21 @@ app.get('/', async (req, res) => {
       ];
     }
 
-    const articles = await Blog.find(filter)
-      .populate('createdBy', 'fullName profileImageURL email bio')
-      .sort({ createdAt: -1 })
-      .limit(30);
+    const [articles, featuredData] = await Promise.all([
+      Blog.find(filter)
+        .populate('createdBy', 'fullName profileImageURL email bio')
+        .sort({ createdAt: -1 })
+        .limit(30),
+      featuredService.getCurrentFeaturedBlog(),
+    ]);
 
     res.render('home', {
       user: req.user,
       articles: articles || [],
       selectedCategory: category || 'All',
       searchQuery: search || '',
+      featuredBlog: featuredData.blog,
+      featuredMeta: featuredData,
     });
   } catch (error) {
     console.error('Error rendering homepage articles:', error);
@@ -92,6 +126,8 @@ app.get('/', async (req, res) => {
       articles: [],
       selectedCategory: 'All',
       searchQuery: '',
+      featuredBlog: null,
+      featuredMeta: null,
     });
   }
 });
